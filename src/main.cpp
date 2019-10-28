@@ -4,6 +4,7 @@
 #include "Job.h"
 #include "PixelJob.h"
 #include "Pool.h"
+#include "Barrier.h"
 #include <iostream>
 #include <algorithm>
 #include <fstream>
@@ -127,17 +128,19 @@ int main () {
 
 	// Les couleurs des pixels dans l'image finale
 	Color * pixels = new Color[scene.getWidth() * scene.getHeight()];
+	int nbJobs = scene.getHeight() * scene.getWidth();
 
-	Pool pool(1000000);
-	pool.start(15);
+	Pool pool(nbJobs);
+	Barrier barrier(nbJobs);
+	pool.start(18);
 
 	// pour chaque pixel, calculer sa couleur
 	for (int x =0 ; x < scene.getWidth() ; x++) {
 		for (int  y = 0 ; y < scene.getHeight() ; y++) {
-			pool.submit((Job *) new PixelJob(lights, scene, x, y, pixels));
+			pool.submit((Job *) new PixelJob(lights, scene, x, y, pixels, barrier));
 		}
 	}
-	pool.stop();
+	barrier.waitFor();
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	    std::cout << "Total time "

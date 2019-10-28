@@ -11,6 +11,7 @@
 #include "Vec3D.h"
 #include "Rayon.h"
 #include "Scene.h"
+#include "Barrier.h"
 #include <vector>
 
 using namespace pr;
@@ -29,9 +30,12 @@ class PixelJob: Job {
 	int x;
 	int y;
 	Color *pixels;
+	Barrier &barrier;
 public:
-	PixelJob(std::vector<Vec3D> & l, Scene & s, int x, int y, Color *pixels) :
-			lights(l), scene(s), x(x), y(y), pixels(pixels) {}
+	PixelJob(std::vector<Vec3D> &l, Scene &s, int x, int y, Color *p,
+			Barrier &b) :
+			lights(l), scene(s), x(x), y(y), pixels(p), barrier(b) {
+	}
 	void run() {
 		Vec3D screenPoint = scene.getScreenPoints()[x][y];
 		Rayon ray(scene.getCameraPos(), screenPoint);
@@ -40,6 +44,7 @@ public:
 
 		if (targetSphere == -1) {
 			// keep background color
+			barrier.done();
 			return;
 		} else {
 			const Sphere &obj = *(scene.begin() + targetSphere);
@@ -50,6 +55,7 @@ public:
 			Color &pixel = pixels[y * scene.getHeight() + x];
 			// mettre a jour la couleur du pixel dans l'image finale.
 			pixel = finalcolor;
+			barrier.done();
 		}
 	}
 	virtual ~PixelJob() {
