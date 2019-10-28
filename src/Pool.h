@@ -32,6 +32,7 @@ public:
 		for (std::thread & t : threads) {
 			t.join();
 		}
+		threads.clear();
 	}
 	void static poolWorker(Queue<Job> &queue) {
 		while (true) {
@@ -45,7 +46,6 @@ public:
 	}
 	~Pool() {
 		stop();
-		threads.clear();
 	}
 };
 

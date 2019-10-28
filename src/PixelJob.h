@@ -30,10 +30,9 @@ class PixelJob: Job {
 	int y;
 	Color *pixels;
 public:
-	PixelJob(std::vector<Vec3D> lights, Scene &s, int x, int y, Color *pixels) :
-			lights(lights), scene(s), x(x), y(y), pixels(pixels) {}
+	PixelJob(std::vector<Vec3D> & l, Scene & s, int x, int y, Color *pixels) :
+			lights(l), scene(s), x(x), y(y), pixels(pixels) {}
 	void run() {
-		std::cout << x << ':' << y << std::endl;
 		Vec3D screenPoint = scene.getScreenPoints()[x][y];
 		Rayon ray(scene.getCameraPos(), screenPoint);
 
