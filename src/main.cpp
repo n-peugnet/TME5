@@ -129,16 +129,15 @@ int main () {
 	Color * pixels = new Color[scene.getWidth() * scene.getHeight()];
 
 	Pool pool(1000000);
-	pool.start(1);
+	pool.start(10);
 
 	// pour chaque pixel, calculer sa couleur
 	for (int x =0 ; x < scene.getWidth() ; x++) {
 		for (int  y = 0 ; y < scene.getHeight() ; y++) {
-			PixelJob pixelJob(lights, scene, x, y, pixels);
-			pool.submit((Job *) &pixelJob);
+			pool.submit((Job *) new PixelJob(lights, scene, x, y, pixels));
 		}
 	}
-
+	this_thread::sleep_for(10s);
 	pool.stop();
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

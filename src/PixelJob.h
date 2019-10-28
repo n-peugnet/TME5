@@ -53,7 +53,7 @@ public:
 			pixel = finalcolor;
 		}
 	}
-	~PixelJob() {
+	virtual ~PixelJob() {
 	}
 
 private:
