@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <mutex>
 #include <condition_variable>
+#include <cstring>
 
 namespace pr {
 
@@ -31,7 +32,7 @@ public:
 	Queue(size_t size) :
 			allocsize(size), begin(0), sz(0) {
 		tab = new T*[size];
-		memset(tab, 0, size * sizeof(T*));
+		std::memset(tab, 0, size * sizeof(T*));
 	}
 
 	size_t size() const {
