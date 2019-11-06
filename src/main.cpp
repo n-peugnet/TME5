@@ -132,7 +132,7 @@ int main () {
 
 	Pool pool(nbJobs);
 	Barrier barrier(nbJobs);
-	pool.start(18);
+	pool.start(4);
 
 	// pour chaque pixel, calculer sa couleur
 	for (int x =0 ; x < scene.getWidth() ; x++) {
